@@ -6,18 +6,25 @@
 /*   By: halnuma <halnuma@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 17:11:02 by halnuma           #+#    #+#             */
-/*   Updated: 2024/12/09 18:00:47 by halnuma          ###   ########.fr       */
+/*   Updated: 2024/12/16 15:02:35 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LIBFT_H
 # define LIBFT_H
 
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE	42
+# endif
+
+# ifndef MAX_FD
+#  define MAX_FD	1024
+# endif
+
 # include <stdlib.h>
 # include <stdint.h>
 # include <limits.h>
 # include <unistd.h>
-//# include <stdio.h>
 # include <stdarg.h>
 
 typedef struct s_list
@@ -82,6 +89,13 @@ int		ft_printstr(char *s);
 int		ft_printnbr(int n);
 int		ft_nbrlen(int n, int count);
 int		ft_printptr(size_t n, char *base);
+char	*next_line(int fd, char *line, char *buffer, int nl);
+char	*get_next_line(int fd);
+char	*ft_strnjoin(char *s1, char *s2, int n);
+char	*join_line(char	*line, char *buffer, int n);
+char	*shift_buffer(char *buffer, int i);
+char	*process_buffer(char *line, char *buffer);
+int		check_if_nl(char *buffer);
 
 
 #endif

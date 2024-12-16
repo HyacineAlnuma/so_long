@@ -1,3 +1,15 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: halnuma <halnuma@student.42.fr>            +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2024/12/16 10:13:48 by halnuma           #+#    #+#              #
+#    Updated: 2024/12/16 10:30:40 by halnuma          ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
 .PHONY: all clean fclean re libft
 
 # ------ COLORS ------
@@ -13,10 +25,11 @@ _CYAN			= \033[0;36m
 
 # ------ VARIABLES ------
 
-NAME			= 42SP
+NAME			= so_long
 CC				= cc
 AR				= ar -rcs
 CFLAGS			= -Wall -Wextra -Werror
+LFLAGS 			= -L$(P_MLX) -L$(P_INC) -lmlx -lXext -lX11 -lm -lbsd
 
 # ------ PATHS ------
 
@@ -25,6 +38,7 @@ P_SRC 			= src/
 P_UTILS			= $(P_SRC)utils/
 P_INC			= includes/
 P_LIB			= libft/
+P_MLX			= minilibx-linux/
 
 # ------ FILES ------
 
@@ -44,24 +58,35 @@ OBJ_ALL 		= $(OBJ_MAIN) $(OBJ_UTILS)
 
 HEADERS			= $(addprefix $(P_INC), $(addsuffix .h, $(HDR_SRC)))
 LIBFT			= $(P_LIB)libft.a
+MLX				= $(P_MLX)libmlx_Linux.a		$(P_MLX)libmlx.a
 
 # ------ RULES ------
 
-all: 			libft $(NAME)
+all: 			libft mlx $(NAME)
 
 $(NAME): 		$(SRC_ALL) Makefile $(HEADERS)
-				@$(CC) $(CFLAGS) -I $(P_INC) $(SRC_ALL) $(LIBFT) -o $@
+				@$(CC) $(CFLAGS) $(LFLAGS) -I $(P_INC) $(SRC_ALL) $(LIBFT) $(MLX) -o $@
 				@echo "$(_YELLOW)Compiling $(SRC_ALL)$(_END)"
 				@echo "$(_GREEN)$(NAME) compiled!$(_END)"
 
+# $(NAME): $(OBJ)
+# 				$(CC) $(OBJ) -Lmlx_linux -lmlx_Linux -L/usr/lib -Imlx_linux -lXext -lX11 -lm -lz -o $(NAME)
+
+# %.o: %.c
+# 				$(CC) -Wall -Wextra -Werror -I/usr/include -Imlx_linux -O3 -c $< -o $@
+
 libft:		
 				@$(MAKE) -C $(P_LIB) --no-print-directory
+
+mlx:		
+				@$(MAKE) -C $(P_MLX)
 
 # ------ BASIC RULES ------
 
 clean: 
 				@rm -rf $(P_OBJ)
 				@$(MAKE) -C $(P_LIB) clean --no-print-directory
+				@$(MAKE) -C $(P_MLX) clean --no-print-directory
 				@echo "$(_CYAN)$(NAME) cleaned!$(_END)"
 
 fclean:
