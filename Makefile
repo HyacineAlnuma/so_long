@@ -6,7 +6,7 @@
 #    By: halnuma <halnuma@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/12/16 10:13:48 by halnuma           #+#    #+#              #
-#    Updated: 2024/12/16 10:30:40 by halnuma          ###   ########.fr        #
+#    Updated: 2024/12/18 09:47:50 by halnuma          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -46,7 +46,8 @@ MAIN			= main
 
 UTILS			=
 
-HDR_SRC			= libft
+HDR_SRC			= libft			mlx_int			\
+				mlx				so_long
 
 SRC_MAIN		= $(addprefix $(P_SRC), $(addsuffix .c, $(MAIN)))
 SRC_UTILS		= $(addprefix $(P_UTILS), $(addsuffix .c, $(UTILS)))

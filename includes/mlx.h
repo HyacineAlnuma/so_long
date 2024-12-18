@@ -29,20 +29,7 @@
 
 #ifndef MLX_H
 
-#define	MLX_H
-
-typedef struct	s_data {
-	void	*mlx;
-	char	*win;
-	void	*img;
-	char	*addr;
-	int		bits_per_pixel;
-	int		line_length;
-	int		endian;
-	int		posX;
-	int		posY;
-	char	**map;
-}				t_data;
+# define MLX_H
 
 void	*mlx_init();
 /*
