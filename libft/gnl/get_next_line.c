@@ -6,11 +6,12 @@
 /*   By: halnuma <halnuma@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 11:30:01 by halnuma           #+#    #+#             */
-/*   Updated: 2024/12/16 14:52:59 by halnuma          ###   ########.fr       */
+/*   Updated: 2024/12/18 11:45:05 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+#include "libft.h"
 
 char	*get_next_line(int fd)
 {

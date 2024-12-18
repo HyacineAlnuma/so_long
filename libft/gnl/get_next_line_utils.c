@@ -6,49 +6,12 @@
 /*   By: halnuma <halnuma@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 11:30:14 by halnuma           #+#    #+#             */
-/*   Updated: 2024/12/16 14:54:03 by halnuma          ###   ########.fr       */
+/*   Updated: 2024/12/18 11:45:52 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-
-void	*ft_calloc(size_t nmemb, size_t size)
-{
-	void	*res;
-	size_t	bytes_nb;
-
-	bytes_nb = nmemb * size;
-	if (nmemb * size != 0)
-		if (nmemb > SIZE_MAX / size)
-			return (NULL);
-	res = malloc(bytes_nb);
-	if (!res)
-		return (NULL);
-	ft_bzero(res, bytes_nb);
-	return (res);
-}
-
-void	ft_bzero(void *s, size_t n)
-{
-	size_t	i;
-
-	i = 0;
-	while (i < n)
-	{
-		*(unsigned char *)(s + i) = '\0';
-		i++;
-	}
-}
-
-size_t	ft_strlen(char *s)
-{
-	size_t	i;
-
-	i = 0;
-	while (s[i])
-		i++;
-	return (i);
-}
+#include "libft.h"
 
 char	*ft_strnjoin(char *s1, char *s2, int n)
 {
