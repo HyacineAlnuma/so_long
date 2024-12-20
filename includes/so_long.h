@@ -6,7 +6,7 @@
 /*   By: halnuma <halnuma@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 09:38:00 by halnuma           #+#    #+#             */
-/*   Updated: 2024/12/18 16:53:09 by halnuma          ###   ########.fr       */
+/*   Updated: 2024/12/20 12:55:53 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # define KEY_RIGHT 65363
 # define KEY_LEFT 65361
 # define KEY_DOWN 65364
+# define ESCAPE 65307
 
 typedef struct s_sprites
 {
@@ -49,6 +50,7 @@ typedef struct s_data
 	int		posY;
 	int		end;
 	char	**map;
+	int		steps;
 	t_sprites sprites;
 }	t_data;
 

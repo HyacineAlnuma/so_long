@@ -6,7 +6,7 @@
 /*   By: halnuma <halnuma@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 10:14:01 by halnuma           #+#    #+#             */
-/*   Updated: 2024/12/18 17:00:28 by halnuma          ###   ########.fr       */
+/*   Updated: 2024/12/20 16:13:14 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,6 +107,8 @@ void	end_level(t_data *data)
 		i++;
 	}
 	data->end = 0;
+	data->steps++;
+	ft_printf("step counter:%d\n", data->steps);
 	mlx_put_image_to_window(data->mlx, data->win, data->sprites.victory, ((data->width - 5)* TILE_SIZE) / 2, ((data->height - 4) * TILE_SIZE) / 2);
 }
 
@@ -127,6 +129,47 @@ void	printmap(char **map)
 		}
 		i++;
 	}
+}
+
+void	free_map(char **map)
+{
+	int	i;
+
+	i = 0;
+	while (map[i])
+	{
+		free(map[i]);
+		i++;
+	}
+	free(map);
+}
+
+int	exit_game(t_data *data)
+{
+	free_map(data->map);
+	if (data->win)
+		mlx_destroy_window(data->mlx, data->win);
+	if (data->sprites.cons)
+		mlx_destroy_image(data->mlx, data->sprites.cons);
+	if (data->sprites.empty)
+		mlx_destroy_image(data->mlx, data->sprites.empty);
+	if (data->sprites.empty_end)
+		mlx_destroy_image(data->mlx, data->sprites.empty_end);
+	if (data->sprites.exit)
+		mlx_destroy_image(data->mlx, data->sprites.exit);
+	if (data->sprites.player)
+		mlx_destroy_image(data->mlx, data->sprites.player);
+	if (data->sprites.player_end)
+		mlx_destroy_image(data->mlx, data->sprites.player_end);
+	if (data->sprites.victory)
+		mlx_destroy_image(data->mlx, data->sprites.victory);
+	if (data->sprites.wall)
+		mlx_destroy_image(data->mlx, data->sprites.wall);
+	if (data->sprites.wall_end)
+		mlx_destroy_image(data->mlx, data->sprites.wall_end);
+	mlx_destroy_display(data->mlx);
+	free(data->mlx);
+	exit(0);
 }
 
 int	input(int key_pressed, void *param)
@@ -159,6 +202,8 @@ int	input(int key_pressed, void *param)
 				build_image(data, data->posX, data->posY, '0');
 				build_image(data, data->posX, --data->posY, 'P');
 				data->map[data->posY][data->posX] = 'P';
+				data->steps++;
+				printf("step counter:%d\n", data->steps);
 			}
 		}
 		if (key_pressed == KEY_RIGHT)
@@ -182,6 +227,8 @@ int	input(int key_pressed, void *param)
 				build_image(data, data->posX, data->posY, '0');
 				build_image(data, ++data->posX, data->posY, 'P');
 				data->map[data->posY][data->posX] = 'P';
+				data->steps++;
+				printf("step counter:%d\n", data->steps);
 			}
 		}
 		if (key_pressed == KEY_DOWN)
@@ -205,6 +252,8 @@ int	input(int key_pressed, void *param)
 				build_image(data, data->posX, data->posY, '0');
 				build_image(data, data->posX, ++data->posY, 'P');
 				data->map[data->posY][data->posX] = 'P';
+				data->steps++;
+				printf("step counter:%d\n", data->steps);
 			}
 		}
 		if (key_pressed == KEY_LEFT)
@@ -228,16 +277,19 @@ int	input(int key_pressed, void *param)
 				build_image(data, data->posX, data->posY, '0');
 				build_image(data, --data->posX, data->posY, 'P');
 				data->map[data->posY][data->posX] = 'P';
+				data->steps++;
+				printf("step counter:%d\n", data->steps);
 			}
 		}
 	}
+	if (key_pressed == ESCAPE)
+		exit_game(data);
 	return (1);
 }
 
 void	put_block(char tile_type, t_data data, int posX, int posY)
 {
 	build_image(&data, posX, posY, tile_type);
-	//mlx_put_image_to_window(data.mlx, data.win, data.img, 0, 0);
 }
 
 t_data	put_line(char *line, t_data data, int posY)
@@ -261,7 +313,6 @@ t_data	put_line(char *line, t_data data, int posY)
 		{
 			data.posX = posX;
 			data.posY = posY;
-			//ft_printf("%d %d\n", data.posX, data.posY);
 			put_block('P', data, posX, posY);
 		}
 		block++;
@@ -283,37 +334,11 @@ t_data	put_lines(t_data data)
 	return (data);
 }
 
-// t_data	parse_map(char *map, t_data data)
-// {
-// 	int			fd;
-// 	char		*line;
-// 	int			posY;
-
-// 	posY = 0;
-// 	fd = open(map, O_RDONLY);
-// 	line = get_next_line(fd);
-
-// 	data.img = mlx_new_image(data.mlx, SCREEN_WIDTH, SCREEN_HEIGHT);
-// 	data.addr = mlx_get_data_addr(data.img, &data.bits_per_pixel, &data.line_length, &data.endian);
-// 	put_line(line, data, posY);
-// 	posY++;
-// 	while (line)
-// 	{
-// 		free(line);
-// 		line = get_next_line(fd);
-// 		if (line)
-// 		{
-// 			data = put_line(line, data, posY);
-// 			posY++;
-// 		}
-// 	}
-// 	return (data);
-// }
-
 t_data	handle_keypress(t_data data)
 {
 
 	mlx_hook(data.win, KeyPress, KeyPressMask, input, &data);
+	mlx_hook(data.win, DestroyNotify, 0, exit_game, &data);
 	return (data);
 }
 
@@ -344,20 +369,22 @@ int	determine_line_nb(char *map_file)
 	return (line_nb);
 }
 
-void	read_map(char *map_file, t_data *data)
+char	**read_map(char *map_file, t_data *data)
 {
 	int		fd;
 	int		i;
 
 	data->height = determine_line_nb(map_file);
 	data->map = (char **)malloc(sizeof(char *) * (data->height  + 1));
+	if (!(data->map))
+		return (NULL);
 	fd = open(map_file, O_RDONLY);
-	// if (!fd)
-	// {
-	// 	free(data.map);
-	// 	ft_putstr_fd("Map error", 2);
-	// 	return (NULL);
-	// }
+	if (!fd)
+	{
+		free(data->map);
+		ft_putstr_fd("Error while openning the map", 2);
+		return (NULL);
+	}
 	data->map[0] = get_next_line(fd);
 	data->width = ft_strlen(data->map[0]);
 	i = 1;
@@ -368,6 +395,7 @@ void	read_map(char *map_file, t_data *data)
 	}
 	data->map[i] = NULL;
 	close(fd);
+	return (data->map);
 }
 
 int	check_if_finish(char **map)
@@ -391,6 +419,245 @@ int	check_if_finish(char **map)
 	return (1);
 }
 
+int	check_borders(char **map)
+{
+	int	i;
+	int	width;
+	int	height;
+
+	i = -1;
+	while (map[0][++i])
+	{
+		if (map[0][i] != '1' && map[0][i] != '\n')
+			return (0);
+	}
+	width = i - 2;
+	i = -1;
+	while (map[++i])
+	{
+		if (map[i][0] != '1' || map[i][width] != '1')
+			return (0);
+	}
+	height = i - 1;
+	i = -1;
+	while (map[height][++i])
+	{
+		if (map[height][i] != '1' && map[0][i] != '\n')
+			return (0);
+	}
+	return (1);
+}
+
+int	check_tile_validity(char c)
+{
+	if (c != '1' && c != '0' && c != 'C' && c != 'E' && c != 'P' && c != '\n')
+		return (0);
+	return (1);
+}
+
+int	check_map_shape(char **map)
+{
+	int	i;
+	int	j;
+	int	width;
+
+	width = 0;
+	while (map[0][width] != '\n')
+		width++;
+	i = 0;
+	j = 0;
+	while (map[i])
+	{
+		j = 0;
+		while (map[i][j])
+		{
+			if (!check_tile_validity(map[i][j]))
+				return (0);
+			j++;
+		}
+		if (map[i][j - 1] == '\n')
+			j--;
+		if (j != width)
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
+int	check_map_content(char **map)
+{
+	int	i;
+	int	j;
+	int	player;
+	int	exit;
+	int	cons;
+
+	player = 0;
+	exit = 0;
+	cons = 0;
+	i = 0;
+	j = 0;
+	while (map[i])
+	{
+		j = 0;
+		while (map[i][j])
+		{
+			if (!check_tile_validity(map[i][j]))
+				return (0);
+			if (map[i][j] == 'P' && player == 1)
+				return (0);
+			if (map[i][j] == 'P' && player == 0)
+				player++;
+			if (map[i][j] == 'E' && exit == 1)
+				return (0);
+			if (map[i][j] == 'E' && exit == 0)
+				exit++;
+			if (map[i][j] == 'C')
+				cons++;
+			j++;
+		}
+		i++;
+	}
+	if (cons == 0 || player == 0 || exit == 0)
+		return (0);
+	return (1);
+}
+
+int	check_map_validity(char **map)
+{
+	if (!check_borders(map) || !check_map_shape(map) || !check_map_content(map))
+		return (0);
+	return (1);
+}
+
+int	check_tile(char tile)
+{
+	if (tile == 'E')
+		return (2);
+	if (tile == '1' || tile == '2')
+		return (0);
+	return (1);
+}
+
+void	pathing_recursive(char **map, int posX, int posY)
+{
+	map[posX][posY] = '2';
+	if (check_tile(map[posX + 1][posY]) == 2)
+		map[posX + 1][posY] = '2';
+	if (check_tile(map[posX + 1][posY]))
+		pathing_recursive(map, (posX + 1), (posY));
+	if (check_tile(map[posX][posY + 1]) == 2)
+		map[posX][posY + 1] = '2';
+	if (check_tile(map[posX][posY + 1]))
+		pathing_recursive(map, (posX), (posY + 1));
+	if (check_tile(map[posX - 1][posY]) == 2)
+		map[posX - 1][posY] = '2';
+	if (check_tile(map[posX - 1][posY]))
+		pathing_recursive(map, (posX - 1), (posY));
+	if (check_tile(map[posX][posY - 1]) == 2)
+		map[posX][posY - 1] = '2';
+	if (check_tile(map[posX][posY - 1]))
+		pathing_recursive(map, (posX), (posY - 1));
+}
+
+void	find_player_pos(char **map, int *pos)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	j = 0;
+	while (map[i])
+	{
+		j = 0;
+		while (map[i][j])
+		{
+			if (map[i][j] == 'P')
+			{
+				pos[0] = j;
+				pos[1] = i;
+				break;
+			}
+			j++;
+		}
+		i++;
+	}
+}
+
+int	check_recursive_result(char **map)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	j = 0;
+	while (map[i])
+	{
+		j = 0;
+		while (map[i][j])
+		{
+			if (map[i][j] == 'C' || map[i][j] == 'E')
+				return (0);
+			j++;
+		}
+		i++;
+	}
+	return (1);
+}
+
+char **copy_map(char **map, int map_size)
+{
+	int		i;
+	char 	**map_cpy;
+
+	i = 0;
+	map_cpy = (char **)malloc(sizeof(char *) * map_size);
+	while (map[i])
+	{
+		map_cpy[i] = ft_strdup(map[i]);
+		if (!map_cpy)
+		{
+			free_map(map_cpy);
+			return (NULL);
+		}
+		i++;
+	}
+	map_cpy[i] = NULL;
+	return (map_cpy);
+
+}
+
+int	check_map_solvability(char **map, int map_size)
+{
+	char	**test_map;
+	int		pos[2];
+
+	test_map = copy_map(map, map_size);
+	if (!test_map)
+		return (0);
+	find_player_pos(test_map, pos);
+	pathing_recursive(test_map, pos[0], pos[1]);
+	for (int i = 0; test_map[i]; i++)
+		ft_printf("%s", test_map[i]);
+	if (!check_recursive_result(test_map))
+	{
+		free(test_map);
+		return (0);
+	}
+	free(test_map);
+	return (1);
+}
+
+int	check_file_extension(char* filename)
+{
+	char	*file_extension;
+
+	file_extension = ft_strchr(filename, '.');
+	if (ft_strncmp(file_extension, ".ber", 5))
+		return (0);
+	return (1);
+}
+
 int	main(int ac, char **av)
 {
 	t_data		data;
@@ -401,12 +668,44 @@ int	main(int ac, char **av)
 	y = 0;
 	if (ac != 2)
 		return (0);
-	read_map(av[1], &data);
+	if (!check_file_extension(av[1]))
+	{
+		ft_putstr_fd("Wrong file extension (.ber needed)", 2);
+		return(0);
+	}
+	if (!read_map(av[1], &data))
+	{
+		ft_putstr_fd("Malloc error", 2);
+		return(0);
+	}	
+	if (data.width > 60 || data.height > 33)
+	{
+		free_map(data.map);
+		ft_putstr_fd("Map too big", 2);
+		return(0);
+	}
+	if (!check_map_validity(data.map))
+	{
+		free_map(data.map);
+		ft_putstr_fd("Map is not valid", 2);
+		return(0);
+	}
+	if (!check_map_solvability(data.map, data.height))
+	{
+		// for (int i = 0; data.map[i]; i++)
+		// 	ft_printf("%s", data.map[i]);
+		free_map(data.map);
+		ft_putstr_fd("Map is not solvable", 2);
+		return(0);
+	}
+			// for (int i = 0; data.map[i]; i++)
+		// 	ft_printf("%s", data.map[i]);
 	data.mlx = mlx_init();
 	data.win = mlx_new_window(data.mlx, ((data.width- 1) * TILE_SIZE), (data.height * TILE_SIZE), "Il faut sauver le soldat capybara");
-	data.img = mlx_new_image(data.mlx, ((data.width - 1) * TILE_SIZE), (data.height * TILE_SIZE));
-	data.addr = mlx_get_data_addr(data.img, &data.bits_per_pixel, &data.line_length, &data.endian);
+	//data.img = mlx_new_image(data.mlx, ((data.width - 1) * TILE_SIZE), (data.height * TILE_SIZE));
+	//data.addr = mlx_get_data_addr(data.img, &data.bits_per_pixel, &data.line_length, &data.endian);
 	data.end = 1;
+	data.steps = 0;
 	data.sprites.wall = mlx_xpm_file_to_image(data.mlx, "sprites/wall.xpm", &x, &y);
 	data.sprites.empty = mlx_xpm_file_to_image(data.mlx, "sprites/empty.xpm", &x, &y);
 	data.sprites.player = mlx_xpm_file_to_image(data.mlx, "sprites/player.xpm", &x, &y);
@@ -419,6 +718,11 @@ int	main(int ac, char **av)
 	data = put_lines(data);
 	handle_keypress(data);
 	mlx_loop(data.mlx);
-	free(data.map);
 	return (0);
 }
+
+//Leaks
+//Error close window
+//Movement sprite
+//Open close door sprite
+//CLEAN
