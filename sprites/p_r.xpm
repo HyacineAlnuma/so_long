@@ -1,5 +1,5 @@
 /* XPM */
-static char * player_right_xpm[] = {
+static char * p_r_xpm[] = {
 "64 64 7 1",
 " 	c #0D2B45",
 ".	c #4D2B32",

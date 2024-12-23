@@ -6,7 +6,7 @@
 /*   By: halnuma <halnuma@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 17:11:02 by halnuma           #+#    #+#             */
-/*   Updated: 2024/12/16 15:02:35 by halnuma          ###   ########.fr       */
+/*   Updated: 2024/12/23 17:00:23 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,5 @@ char	*join_line(char	*line, char *buffer, int n);
 char	*shift_buffer(char *buffer, int i);
 char	*process_buffer(char *line, char *buffer);
 int		check_if_nl(char *buffer);
-
 
 #endif

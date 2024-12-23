@@ -1,5 +1,5 @@
 /* XPM */
-static char * wall_end_xpm[] = {
+static char * wall_e_xpm[] = {
 "64 64 8 1",
 " 	c #382830",
 ".	c #6C4523",

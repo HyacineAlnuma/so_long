@@ -6,7 +6,7 @@
 #    By: halnuma <halnuma@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/12/16 10:13:48 by halnuma           #+#    #+#              #
-#    Updated: 2024/12/18 16:55:17 by halnuma          ###   ########.fr        #
+#    Updated: 2024/12/23 16:15:16 by halnuma          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -42,12 +42,13 @@ P_MLX			= minilibx-linux/
 
 # ------ FILES ------
 
-MAIN			= main
+MAIN			= main						init_game		\
+				end_game					map_display		\
+				map_error_utils				map_utils		\
+				map_solvability_utils		move_player
 
-UTILS			=
-
-HDR_SRC			= libft			mlx_int			\
-				mlx				so_long
+HDR_SRC			= libft					mlx_int			\
+				mlx						so_long
 
 SRC_MAIN		= $(addprefix $(P_SRC), $(addsuffix .c, $(MAIN)))
 SRC_UTILS		= $(addprefix $(P_UTILS), $(addsuffix .c, $(UTILS)))
@@ -69,12 +70,6 @@ $(NAME): 		$(SRC_ALL) Makefile $(HEADERS)
 				@$(CC) $(CFLAGS) $(LFLAGS) -I $(P_INC) $(SRC_ALL) $(LIBFT) $(MLX) -o $@
 				@echo "$(_YELLOW)Compiling $(SRC_ALL)$(_END)"
 				@echo "$(_GREEN)$(NAME) compiled!$(_END)"
-
-# $(NAME): $(OBJ)
-# 				$(CC) $(OBJ) -Lmlx_linux -lmlx_Linux -L/usr/lib -Imlx_linux -lXext -lX11 -lm -lz -o $(NAME)
-
-# %.o: %.c
-# 				$(CC) -Wall -Wextra -Werror -I/usr/include -Imlx_linux -O3 -c $< -o $@
 
 libft:		
 				@$(MAKE) -C $(P_LIB) --no-print-directory
