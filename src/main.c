@@ -6,7 +6,7 @@
 /*   By: halnuma <halnuma@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 10:14:01 by halnuma           #+#    #+#             */
-/*   Updated: 2024/12/20 16:13:14 by halnuma          ###   ########.fr       */
+/*   Updated: 2024/12/23 11:56:10 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,13 +20,25 @@ void	build_image(t_data *data, int posX, int posY, char tile_type)
 	if (tile_type == '0')
 		mlx_put_image_to_window(data->mlx, data->win, data->sprites.empty, (posX * TILE_SIZE), (posY * TILE_SIZE));
 	if (tile_type == '1')
-		mlx_put_image_to_window(data->mlx, data->win, data->sprites.wall, (posX * TILE_SIZE), (posY * TILE_SIZE));
+	{
+		if (posX == 0 && posY == 0)
+			mlx_put_image_to_window(data->mlx, data->win, data->sprites.empty_end, (posX * TILE_SIZE), (posY * TILE_SIZE));
+		else
+			mlx_put_image_to_window(data->mlx, data->win, data->sprites.wall, (posX * TILE_SIZE), (posY * TILE_SIZE));
+	}
 	if (tile_type == 'C')
 		mlx_put_image_to_window(data->mlx, data->win, data->sprites.cons, (posX * TILE_SIZE), (posY * TILE_SIZE));
 	if (tile_type == 'E')
-		mlx_put_image_to_window(data->mlx, data->win, data->sprites.exit, (posX * TILE_SIZE), (posY * TILE_SIZE));
+		mlx_put_image_to_window(data->mlx, data->win, data->sprites.exit_close, (posX * TILE_SIZE), (posY * TILE_SIZE));
+	if (tile_type == 'e')
+		mlx_put_image_to_window(data->mlx, data->win, data->sprites.exit_open, (posX * TILE_SIZE), (posY * TILE_SIZE));
 	if (tile_type == 'P')
-		mlx_put_image_to_window(data->mlx, data->win, data->sprites.player, (posX * TILE_SIZE), (posY * TILE_SIZE));
+	{
+		if (data->direction == 0)
+			mlx_put_image_to_window(data->mlx, data->win, data->sprites.player_right, (posX * TILE_SIZE), (posY * TILE_SIZE));
+		if (data->direction == 1)
+			mlx_put_image_to_window(data->mlx, data->win, data->sprites.player_left, (posX * TILE_SIZE), (posY * TILE_SIZE));
+	}
 }
 
 void	build_end_image(t_data *data, int posX, int posY, char tile_type)
@@ -35,8 +47,8 @@ void	build_end_image(t_data *data, int posX, int posY, char tile_type)
 		mlx_put_image_to_window(data->mlx, data->win, data->sprites.empty_end, (posX * TILE_SIZE), (posY * TILE_SIZE));
 	if (tile_type == '1')
 		mlx_put_image_to_window(data->mlx, data->win, data->sprites.wall_end, (posX * TILE_SIZE), (posY * TILE_SIZE));
-	if (tile_type == 'P')
-		mlx_put_image_to_window(data->mlx, data->win, data->sprites.player_end, (posX * TILE_SIZE), (posY * TILE_SIZE));
+	if (tile_type == 'e')
+		mlx_put_image_to_window(data->mlx, data->win, data->sprites.exit_end, (posX * TILE_SIZE), (posY * TILE_SIZE));
 }
 
 int	test_move(t_data *data, int dir)
@@ -58,11 +70,11 @@ int	test_move(t_data *data, int dir)
 		test_posX++;
 	if (dir == 3)
 		test_posY++;
-	if (data->map[test_posY][test_posX] == '1')
+	if (data->map[test_posY][test_posX] == '1' || data->map[test_posY][test_posX] == 'E')
 		return (0);
 	if (data->map[test_posY][test_posX] == 'C')
 		return (2);
-	if (data->map[test_posY][test_posX] == 'E')
+	if (data->map[test_posY][test_posX] == 'e')
 		return (3);
 	else
 		return (1);
@@ -91,8 +103,9 @@ int	check_if_exit_possible(char **map)
 
 void	end_level(t_data *data)
 {
-	int	i;
-	int	j;
+	int		i;
+	int		j;
+	char	*steps;
 
 	j = 0;
 	i = 0;
@@ -108,7 +121,13 @@ void	end_level(t_data *data)
 	}
 	data->end = 0;
 	data->steps++;
-	ft_printf("step counter:%d\n", data->steps);
+	ft_printf("Steps :%d\n", data->steps);
+	ft_printf("Bien vu chef tu régales\n");
+	steps = ft_itoa(data->steps);
+	build_image(data, 0, 0, '1');
+	mlx_string_put(data->mlx, data->win, 15, 25, 0xFFFFD4A3, "Steps:");
+	mlx_string_put(data->mlx, data->win, 15, 45, 0xFFFFD4A3, steps);
+	free(steps);
 	mlx_put_image_to_window(data->mlx, data->win, data->sprites.victory, ((data->width - 5)* TILE_SIZE) / 2, ((data->height - 4) * TILE_SIZE) / 2);
 }
 
@@ -155,12 +174,16 @@ int	exit_game(t_data *data)
 		mlx_destroy_image(data->mlx, data->sprites.empty);
 	if (data->sprites.empty_end)
 		mlx_destroy_image(data->mlx, data->sprites.empty_end);
-	if (data->sprites.exit)
-		mlx_destroy_image(data->mlx, data->sprites.exit);
-	if (data->sprites.player)
-		mlx_destroy_image(data->mlx, data->sprites.player);
-	if (data->sprites.player_end)
-		mlx_destroy_image(data->mlx, data->sprites.player_end);
+	if (data->sprites.exit_open)
+		mlx_destroy_image(data->mlx, data->sprites.exit_open);
+	if (data->sprites.exit_close)
+		mlx_destroy_image(data->mlx, data->sprites.exit_close);
+	if (data->sprites.exit_end)
+		mlx_destroy_image(data->mlx, data->sprites.exit_end);
+	if (data->sprites.player_right)
+		mlx_destroy_image(data->mlx, data->sprites.player_right);
+	if (data->sprites.player_left)
+		mlx_destroy_image(data->mlx, data->sprites.player_left);
 	if (data->sprites.victory)
 		mlx_destroy_image(data->mlx, data->sprites.victory);
 	if (data->sprites.wall)
@@ -172,11 +195,60 @@ int	exit_game(t_data *data)
 	exit(0);
 }
 
+void	find_exit_pos(char **map, int *pos)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	j = 0;
+	while (map[i])
+	{
+		j = 0;
+		while (map[i][j])
+		{
+			if (map[i][j] == 'E')
+			{
+				pos[0] = j;
+				pos[1] = i;
+				break;
+			}
+			j++;
+		}
+		i++;
+	}
+}
+
+void convert_exit(t_data *data)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	j = 0;
+	while (data->map[i])
+	{
+		j = 0;
+		while (data->map[i][j])
+		{
+			if (data->map[i][j] == 'E')
+			{
+				data->map[i][j] = 'e';
+				build_image(data, j, i, 'e');
+				break;
+			}
+			j++;
+		}
+		i++;
+	}
+}
+
 int	input(int key_pressed, void *param)
 {
 	t_data	*data;
 	int		res;
 	int		exit;
+	char	*steps;
 	
 	data = param;
 	if (data->end)
@@ -186,15 +258,18 @@ int	input(int key_pressed, void *param)
 			res = test_move(data, 1);
 			if (res == 3)
 			{
+				data->map[data->posY][data->posX] = '0';
+				//data->map[--data->posY][data->posX] = '0';
+				build_image(data, data->posX, data->posY, '0');
+				end_level(data);
+				return (1);
+			}
+			if (res == 2)
+			{
+				data->map[data->posY - 1][data->posX] = 'P';
 				exit = check_if_exit_possible(data->map);
 				if (exit)
-				{
-					data->map[data->posY][data->posX] = '0';
-					data->map[--data->posY][data->posX] = 'P';
-					build_image(data, data->posX, data->posY, '0');
-					end_level(data);
-				}
-				return (1);
+					convert_exit(data);
 			}
 			if (res && res != 3)
 			{
@@ -203,7 +278,12 @@ int	input(int key_pressed, void *param)
 				build_image(data, data->posX, --data->posY, 'P');
 				data->map[data->posY][data->posX] = 'P';
 				data->steps++;
-				printf("step counter:%d\n", data->steps);
+				printf("Steps: %d\n", data->steps);
+				steps = ft_itoa(data->steps);
+				build_image(data, 0, 0, '1');
+				mlx_string_put(data->mlx, data->win, 15, 25, 0xFFFFD4A3, "Steps:");
+				mlx_string_put(data->mlx, data->win, 15, 45, 0xFFFFD4A3, steps);
+				free(steps);
 			}
 		}
 		if (key_pressed == KEY_RIGHT)
@@ -211,24 +291,33 @@ int	input(int key_pressed, void *param)
 			res = test_move(data, 2);
 			if (res == 3)
 			{
+				data->map[data->posY][data->posX] = '0';
+				//data->map[data->posY][++data->posX] = '0';
+				build_image(data, data->posX, data->posY, '0');
+				end_level(data);
+				return (1);
+			}
+			if (res == 2)
+			{
+				data->map[data->posY][data->posX + 1] = 'P';
 				exit = check_if_exit_possible(data->map);
 				if (exit)
-				{
-					data->map[data->posY][data->posX] = '0';
-					data->map[data->posY][++data->posX] = 'P';
-					build_image(data, data->posX, data->posY, '0');
-					end_level(data);
-				}
-				return (1);
+					convert_exit(data);
 			}
 			if (res)
 			{
 				data->map[data->posY][data->posX] = '0';
+				data->direction = 0;
 				build_image(data, data->posX, data->posY, '0');
 				build_image(data, ++data->posX, data->posY, 'P');
 				data->map[data->posY][data->posX] = 'P';
 				data->steps++;
-				printf("step counter:%d\n", data->steps);
+				printf("Steps: %d\n", data->steps);
+				steps = ft_itoa(data->steps);
+				build_image(data, 0, 0, '1');
+				mlx_string_put(data->mlx, data->win, 15, 25, 0xFFFFD4A3, "Steps:");
+				mlx_string_put(data->mlx, data->win, 15, 45, 0xFFFFD4A3, steps);
+				free(steps);
 			}
 		}
 		if (key_pressed == KEY_DOWN)
@@ -236,15 +325,18 @@ int	input(int key_pressed, void *param)
 			res = test_move(data, 3);
 			if (res == 3)
 			{
+				data->map[data->posY][data->posX] = '0';
+				//data->map[++data->posY][data->posX] = '0';
+				build_image(data, data->posX, data->posY, '0');
+				end_level(data);
+				return (1);
+			}
+			if (res == 2)
+			{
+				data->map[data->posY + 1][data->posX] = 'P';
 				exit = check_if_exit_possible(data->map);
 				if (exit)
-				{
-					data->map[data->posY][data->posX] = '0';
-					data->map[++data->posY][data->posX] = 'P';
-					build_image(data, data->posX, data->posY, '0');
-					end_level(data);
-				}
-				return (1);
+					convert_exit(data);
 			}
 			if (res)
 			{
@@ -253,7 +345,12 @@ int	input(int key_pressed, void *param)
 				build_image(data, data->posX, ++data->posY, 'P');
 				data->map[data->posY][data->posX] = 'P';
 				data->steps++;
-				printf("step counter:%d\n", data->steps);
+				printf("Steps: %d\n", data->steps);
+				steps = ft_itoa(data->steps);
+				build_image(data, 0, 0, '1');
+				mlx_string_put(data->mlx, data->win, 15, 25, 0xFFFFD4A3, "Steps:");
+				mlx_string_put(data->mlx, data->win, 15, 45, 0xFFFFD4A3, steps);
+				free(steps);
 			}
 		}
 		if (key_pressed == KEY_LEFT)
@@ -261,24 +358,33 @@ int	input(int key_pressed, void *param)
 			res = test_move(data, 4);
 			if (res == 3)
 			{
+				data->map[data->posY][data->posX] = '0';
+				//data->map[data->posY][--data->posX] = '0';
+				build_image(data, data->posX, data->posY, '0');
+				end_level(data);
+				return (1);
+			}
+			if (res == 2)
+			{
+				data->map[data->posY][data->posX - 1] = 'P';
 				exit = check_if_exit_possible(data->map);
 				if (exit)
-				{
-					data->map[data->posY][data->posX] = '0';
-					data->map[data->posY][--data->posX] = 'P';
-					build_image(data, data->posX, data->posY, '0');
-					end_level(data);
-				}
-				return (1);
+					convert_exit(data);
 			}
 			if (res)
 			{
 				data->map[data->posY][data->posX] = '0';
+				data->direction = 1;
 				build_image(data, data->posX, data->posY, '0');
 				build_image(data, --data->posX, data->posY, 'P');
 				data->map[data->posY][data->posX] = 'P';
 				data->steps++;
-				printf("step counter:%d\n", data->steps);
+				printf("Steps: %d\n", data->steps);
+				steps = ft_itoa(data->steps);
+				build_image(data, 0, 0, '1');
+				mlx_string_put(data->mlx, data->win, 15, 25, 0xFFFFD4A3, "Steps:");
+				mlx_string_put(data->mlx, data->win, 15, 45, 0xFFFFD4A3, steps);
+				free(steps);
 			}
 		}
 	}
@@ -611,8 +717,8 @@ char **copy_map(char **map, int map_size)
 	char 	**map_cpy;
 
 	i = 0;
-	map_cpy = (char **)malloc(sizeof(char *) * map_size);
-	while (map[i])
+	map_cpy = (char **)malloc(sizeof(char *) * (map_size + 1));
+	while (i < map_size)
 	{
 		map_cpy[i] = ft_strdup(map[i]);
 		if (!map_cpy)
@@ -632,19 +738,22 @@ int	check_map_solvability(char **map, int map_size)
 	char	**test_map;
 	int		pos[2];
 
+	pos[0] = 0;
+	pos[1] = 0;
 	test_map = copy_map(map, map_size);
 	if (!test_map)
 		return (0);
 	find_player_pos(test_map, pos);
 	pathing_recursive(test_map, pos[0], pos[1]);
-	for (int i = 0; test_map[i]; i++)
-		ft_printf("%s", test_map[i]);
+	// for (int i = 0; test_map[i]; i++)
+	// 	ft_printf("%s", test_map[i]);
 	if (!check_recursive_result(test_map))
 	{
 		free(test_map);
 		return (0);
 	}
-	free(test_map);
+	free_map(test_map);
+	//free(test_map);
 	return (1);
 }
 
@@ -670,24 +779,24 @@ int	main(int ac, char **av)
 		return (0);
 	if (!check_file_extension(av[1]))
 	{
-		ft_putstr_fd("Wrong file extension (.ber needed)", 2);
+		ft_putstr_fd("Error: Wrong file extension (.ber needed)", 2);
 		return(0);
 	}
 	if (!read_map(av[1], &data))
 	{
-		ft_putstr_fd("Malloc error", 2);
+		ft_putstr_fd("Error: Malloc failed", 2);
 		return(0);
 	}	
 	if (data.width > 60 || data.height > 33)
 	{
 		free_map(data.map);
-		ft_putstr_fd("Map too big", 2);
+		ft_putstr_fd("Error: The map too big", 2);
 		return(0);
 	}
 	if (!check_map_validity(data.map))
 	{
 		free_map(data.map);
-		ft_putstr_fd("Map is not valid", 2);
+		ft_putstr_fd("Error: The map is not valid", 2);
 		return(0);
 	}
 	if (!check_map_solvability(data.map, data.height))
@@ -695,7 +804,7 @@ int	main(int ac, char **av)
 		// for (int i = 0; data.map[i]; i++)
 		// 	ft_printf("%s", data.map[i]);
 		free_map(data.map);
-		ft_putstr_fd("Map is not solvable", 2);
+		ft_putstr_fd("Error: The map is not solvable", 2);
 		return(0);
 	}
 			// for (int i = 0; data.map[i]; i++)
@@ -706,14 +815,17 @@ int	main(int ac, char **av)
 	//data.addr = mlx_get_data_addr(data.img, &data.bits_per_pixel, &data.line_length, &data.endian);
 	data.end = 1;
 	data.steps = 0;
+	data.direction = 0;
 	data.sprites.wall = mlx_xpm_file_to_image(data.mlx, "sprites/wall.xpm", &x, &y);
 	data.sprites.empty = mlx_xpm_file_to_image(data.mlx, "sprites/empty.xpm", &x, &y);
-	data.sprites.player = mlx_xpm_file_to_image(data.mlx, "sprites/player.xpm", &x, &y);
+	data.sprites.player_right = mlx_xpm_file_to_image(data.mlx, "sprites/player_right.xpm", &x, &y);
+	data.sprites.player_left = mlx_xpm_file_to_image(data.mlx, "sprites/player_left.xpm", &x, &y);
 	data.sprites.cons = mlx_xpm_file_to_image(data.mlx, "sprites/cons.xpm", &x, &y);
-	data.sprites.exit = mlx_xpm_file_to_image(data.mlx, "sprites/exit.xpm", &x, &y);
+	data.sprites.exit_open = mlx_xpm_file_to_image(data.mlx, "sprites/exit_open.xpm", &x, &y);
+	data.sprites.exit_close = mlx_xpm_file_to_image(data.mlx, "sprites/exit_close.xpm", &x, &y);
+	data.sprites.exit_end = mlx_xpm_file_to_image(data.mlx, "sprites/exit_end.xpm", &x, &y);
 	data.sprites.wall_end = mlx_xpm_file_to_image(data.mlx, "sprites/wall_end.xpm", &x, &y);
 	data.sprites.empty_end = mlx_xpm_file_to_image(data.mlx, "sprites/empty_end.xpm", &x, &y);
-	data.sprites.player_end = mlx_xpm_file_to_image(data.mlx, "sprites/player_end.xpm", &x, &y);
 	data.sprites.victory = mlx_xpm_file_to_image(data.mlx, "sprites/victory.xpm", &x, &y);
 	data = put_lines(data);
 	handle_keypress(data);
@@ -721,8 +833,4 @@ int	main(int ac, char **av)
 	return (0);
 }
 
-//Leaks
-//Error close window
-//Movement sprite
-//Open close door sprite
 //CLEAN

@@ -6,7 +6,7 @@
 /*   By: halnuma <halnuma@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 09:38:00 by halnuma           #+#    #+#             */
-/*   Updated: 2024/12/20 12:55:53 by halnuma          ###   ########.fr       */
+/*   Updated: 2024/12/23 11:38:54 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,14 @@ typedef struct s_sprites
 {
 	void	*wall;
 	void	*empty;
-	void	*player;
+	void	*player_right;
+	void	*player_left;
 	void	*cons;
-	void	*exit;	
+	void	*exit_open;
+	void	*exit_close;
+	void	*exit_end;
 	void	*wall_end;
 	void	*empty_end;
-	void	*player_end;
 	void	*victory;
 }	t_sprites;
 
@@ -51,6 +53,7 @@ typedef struct s_data
 	int		end;
 	char	**map;
 	int		steps;
+	int		direction;
 	t_sprites sprites;
 }	t_data;
 
