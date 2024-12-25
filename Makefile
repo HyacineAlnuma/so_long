@@ -6,7 +6,7 @@
 #    By: halnuma <halnuma@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/12/16 10:13:48 by halnuma           #+#    #+#              #
-#    Updated: 2024/12/23 16:15:16 by halnuma          ###   ########.fr        #
+#    Updated: 2024/12/25 10:24:03 by halnuma          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -50,13 +50,9 @@ MAIN			= main						init_game		\
 HDR_SRC			= libft					mlx_int			\
 				mlx						so_long
 
-SRC_MAIN		= $(addprefix $(P_SRC), $(addsuffix .c, $(MAIN)))
-SRC_UTILS		= $(addprefix $(P_UTILS), $(addsuffix .c, $(UTILS)))
-SRC_ALL			= $(SRC_MAIN) $(SRC_UTILS)
+SRC_ALL		= $(addprefix $(P_SRC), $(addsuffix .c, $(MAIN)))
 
-OBJ_MAIN 		= $(addprefix $(P_OBJ), $(addsuffix .o, $(MAIN)))
-OBJ_UTILS 		= $(addprefix $(P_OBJ), $(addsuffix .o, $(UTILS)))
-OBJ_ALL 		= $(OBJ_MAIN) $(OBJ_UTILS)
+OBJ_ALL 		= $(addprefix $(P_OBJ), $(addsuffix .o, $(MAIN)))
 
 HEADERS			= $(addprefix $(P_INC), $(addsuffix .h, $(HDR_SRC)))
 LIBFT			= $(P_LIB)libft.a
