@@ -6,7 +6,7 @@
 #    By: halnuma <halnuma@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/12/16 10:13:48 by halnuma           #+#    #+#              #
-#    Updated: 2024/12/25 10:24:03 by halnuma          ###   ########.fr        #
+#    Updated: 2024/12/25 10:26:53 by halnuma          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -35,7 +35,6 @@ LFLAGS 			= -L$(P_MLX) -L$(P_INC) -lmlx -lXext -lX11 -lm -lbsd
 
 P_OBJ 			= obj/
 P_SRC 			= src/
-P_UTILS			= $(P_SRC)utils/
 P_INC			= includes/
 P_LIB			= libft/
 P_MLX			= minilibx-linux/
@@ -50,7 +49,7 @@ MAIN			= main						init_game		\
 HDR_SRC			= libft					mlx_int			\
 				mlx						so_long
 
-SRC_ALL		= $(addprefix $(P_SRC), $(addsuffix .c, $(MAIN)))
+SRC_ALL			= $(addprefix $(P_SRC), $(addsuffix .c, $(MAIN)))
 
 OBJ_ALL 		= $(addprefix $(P_OBJ), $(addsuffix .o, $(MAIN)))
 
