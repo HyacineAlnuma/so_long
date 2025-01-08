@@ -6,7 +6,7 @@
 /*   By: halnuma <halnuma@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 10:14:01 by halnuma           #+#    #+#             */
-/*   Updated: 2024/12/23 16:57:09 by halnuma          ###   ########.fr       */
+/*   Updated: 2025/01/08 09:31:51 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ void	check_map_errors(t_game *game, char *map_file)
 	if (game->width > 60 || game->height > 33)
 	{
 		free_map(game->map);
-		ft_putstr_fd("Error: The map too big", 2);
+		ft_putstr_fd("Error: The map is too big", 2);
 		exit(EXIT_FAILURE);
 	}
 	if (!check_map_validity(game->map))
