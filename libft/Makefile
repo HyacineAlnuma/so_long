@@ -6,7 +6,7 @@
 #    By: halnuma <halnuma@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/18 08:45:55 by halnuma           #+#    #+#              #
-#    Updated: 2024/12/16 15:00:41 by halnuma          ###   ########.fr        #
+#    Updated: 2025/01/08 12:34:07 by halnuma          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,6 +22,7 @@ _YELLOW			= \033[0;33m
 _BLUE			= \033[0;34m
 _PURPLE			= \033[0;35m
 _CYAN			= \033[0;36m
+_BOLD			= \e[1m
 
 # ------ VARIABLES ------
 
@@ -66,27 +67,29 @@ HEADERS			= $(P_INC)libft.h 			$(P_INC)ft_printf.h \
 
 all: 			libft $(NAME)
 
-$(NAME): 		$(OBJ_ALL) Makefile $(P_INC)
+$(NAME): 		$(OBJ_ALL) Makefile $(P_INC) $(LIBFT)
 				@cp $(LIBFT) $(NAME)
 				@$(AR) $(NAME) $(OBJ_ALL)
-				@echo "$(_GREEN)libft compiled!$(_END)"
+				@echo -n "$(_CYAN)$(_BOLD)]$(_END)"
+				@echo "$(_GREEN)$(_BOLD) => Libft compiled!$(_END)"
 
 $(P_OBJ):
 				@mkdir -p $(P_OBJ)
 
 $(P_OBJ)%.o:	$(P_PRINTF)%.c Makefile $(HEADERS) | $(P_OBJ)
-#				@echo "$(_YELLOW)Compiling $<$(_END)"
+				@echo -n "$(_YELLOW)=$(_END)"
 				@$(CC) $(CFLAGS) -I $(P_INC) -c $< -o $@
 
 $(P_OBJ)%.o:	$(P_UTILS)%.c Makefile $(HEADERS) | $(P_OBJ)
-#				@echo "$(_YELLOW)Compiling $<$(_END)"
+				@echo -n "$(_YELLOW)=$(_END)"
 				@$(CC) $(CFLAGS) -I $(P_INC) -c $< -o $@
 
 $(P_OBJ)%.o:	$(P_GNL)%.c Makefile $(HEADERS) | $(P_OBJ)
-#				@echo "$(_YELLOW)Compiling $<$(_END)"
+				@echo -n "$(_YELLOW)=$(_END)"
 				@$(CC) $(CFLAGS) -I $(P_INC) -c $< -o $@
 
 libft:		
+				@echo -n "$(_CYAN)$(_BOLD)[$(_END)"
 				@$(MAKE) -C $(P_LIB) --no-print-directory
 
 # ------ BASIC RULES ------

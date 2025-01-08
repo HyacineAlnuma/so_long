@@ -6,7 +6,7 @@
 /*   By: halnuma <halnuma@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 15:50:36 by halnuma           #+#    #+#             */
-/*   Updated: 2024/12/23 16:18:18 by halnuma          ###   ########.fr       */
+/*   Updated: 2025/01/08 12:24:29 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	move_player(t_game *game, int pos_x, int pos_y, int key_pressed)
 	display_tile(game, game->pos_x, game->pos_y, 'P');
 	game->map[game->pos_y][game->pos_x] = 'P';
 	game->steps++;
-	printf("Steps: %d\n", game->steps);
+	ft_printf("Steps: %d\n", game->steps);
 	steps = ft_itoa(game->steps);
 	display_tile(game, 0, 0, '1');
 	mlx_string_put(game->mlx, game->win, 15, 25, 0xFFFFD4A3, "Steps:");

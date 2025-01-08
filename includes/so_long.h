@@ -6,7 +6,7 @@
 /*   By: halnuma <halnuma@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 09:38:00 by halnuma           #+#    #+#             */
-/*   Updated: 2024/12/23 16:47:18 by halnuma          ###   ########.fr       */
+/*   Updated: 2025/01/08 12:23:46 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,9 @@ typedef struct s_game
 }	t_game;
 
 void	run_game(t_game *game);
-void	load_sprites(t_game *game, int x, int y);
+void	init_game(t_game *game, int size_x, int size_y);
+int		load_sprites_1(t_game *game, int x, int y);
+int		load_sprites_2(t_game *game, int x, int y);
 void	check_map_errors(t_game *game, char *map_file);
 int		check_file_extension(char *filename);
 int		check_map_solvability(char **map, int map_size);

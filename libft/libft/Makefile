@@ -9,6 +9,7 @@ _YELLOW			= \033[0;33m
 _BLUE			= \033[0;34m
 _PURPLE			= \033[0;35m
 _CYAN			= \033[0;36m
+_BOLD			= \e[1m
 
 # ----- VARIABLES -----
 
@@ -75,7 +76,7 @@ $(P_OBJ):
 				@mkdir -p $(P_OBJ)
 
 $(P_OBJ)%.o : 	$(P_SRC)%.c Makefile $(HEADER) | $(P_OBJ)
-#				@echo "$(_YELLOW)Compiling $<$(_END)"
+				@echo -n "$(_YELLOW)=$(_END)"
 				@$(CC) $(CFLAGS) -I $(P_INC) -c $< -o $@
 
 # ----- BASIC RULES -----

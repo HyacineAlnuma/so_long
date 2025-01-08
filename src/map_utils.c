@@ -6,7 +6,7 @@
 /*   By: halnuma <halnuma@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 15:54:11 by halnuma           #+#    #+#             */
-/*   Updated: 2024/12/23 16:55:42 by halnuma          ###   ########.fr       */
+/*   Updated: 2025/01/08 12:00:49 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,6 +114,12 @@ char	**copy_map(char **map, int map_size)
 
 	i = 0;
 	map_cpy = (char **)malloc(sizeof(char *) * (map_size + 1));
+	if (!map_cpy)
+	{
+		free_map(map);
+		ft_putstr_fd("Error: Malloc failed", 2);
+		exit(EXIT_FAILURE);
+	}
 	while (i < map_size)
 	{
 		map_cpy[i] = ft_strdup(map[i]);
