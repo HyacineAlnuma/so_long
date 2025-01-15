@@ -6,7 +6,7 @@
 /*   By: halnuma <halnuma@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 15:39:58 by halnuma           #+#    #+#             */
-/*   Updated: 2024/12/23 16:18:07 by halnuma          ###   ########.fr       */
+/*   Updated: 2025/01/15 10:54:30 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,7 @@ int	check_map_solvability(char **map, int map_size)
 	pathing_recursive(test_map, pos[0], pos[1]);
 	if (!check_recursive_result(test_map))
 	{
-		free(test_map);
+		free_map(test_map);
 		return (0);
 	}
 	free_map(test_map);

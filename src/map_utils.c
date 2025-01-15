@@ -6,7 +6,7 @@
 /*   By: halnuma <halnuma@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 15:54:11 by halnuma           #+#    #+#             */
-/*   Updated: 2025/01/08 12:00:49 by halnuma          ###   ########.fr       */
+/*   Updated: 2025/01/15 10:54:57 by halnuma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,11 +72,12 @@ char	**read_map(char *map_file, t_game *game)
 		return (NULL);
 	game->map[0] = get_next_line(fd);
 	game->width = ft_strlen(game->map[0]);
-	i = 1;
-	while (i < game->height)
+	i = 0;
+	while (++i < game->height)
 	{
 		game->map[i] = get_next_line(fd);
-		i++;
+		if (!game->map[i])
+			return (NULL);
 	}
 	game->map[i] = NULL;
 	close(fd);
